@@ -24,7 +24,7 @@
 - Reports Tinify's current monthly compression count in task summaries, helping teams monitor API usage and quota.
 - Provides an explicit API-key validation method for CI and preflight checks.
 
-## Standout features
+## Features 
 
 ### Modern image-format support
 
