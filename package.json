@@ -1,10 +1,10 @@
 {
   "name": "grunt-tinypng-extended",
-  "version": "4.0.0",
-  "description": "Grunt plugin for compressing and optimizing images with the TinyPNG API.",
+  "version": "0.0.1",
+  "description": "Grunt plugin for compressing PNG, JPEG, WebP, AVIF, and other images with the official TinyPNG API, featuring caching, retries, parallel processing, metadata preservation, and summaries.",
   "main": "index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "index.js", "README.md", "LICENSE", "CHANGELOG.md"],
+  "files": ["dist", "index.js", "tasks", "README.md", "LICENSE", "CHANGELOG.md"],
   "repository": { "type": "git", "url": "https://github.com/nymo/grunt-tinypng-extended.git" },
   "bugs": { "url": "https://github.com/nymo/grunt-tinypng-extended/issues" },
   "homepage": "https://github.com/nymo/grunt-tinypng-extended#readme",
