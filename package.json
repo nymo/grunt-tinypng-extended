@@ -1,12 +1,24 @@
 {
   "name": "grunt-tinypng-extended",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Grunt plugin for compressing PNG, JPEG, WebP, AVIF, and other images with the official TinyPNG API, featuring caching, retries, parallel processing, metadata preservation, and summaries.",
   "main": "index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist", "index.js", "tasks", "README.md", "LICENSE", "CHANGELOG.md"],
-  "repository": { "type": "git", "url": "https://github.com/nymo/grunt-tinypng-extended.git" },
-  "bugs": { "url": "https://github.com/nymo/grunt-tinypng-extended/issues" },
+  "files": [
+    "dist",
+    "index.js",
+    "tasks",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nymo/grunt-tinypng-extended.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nymo/grunt-tinypng-extended/issues"
+  },
   "homepage": "https://github.com/nymo/grunt-tinypng-extended#readme",
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -17,11 +29,32 @@
     "coverage": "vitest run --coverage --coverage.include=dist/**/*.js --coverage.exclude=test/** --coverage.reporter=text --coverage.reporter=lcov --coverage.reporter=json-summary",
     "precoverage": "npm run build"
   },
-  "author": { "name": "Gregor Panek", "email": "gp@gregorpanek.de", "url": "https://github.com/nymo" },
-  "keywords": ["gruntplugin", "tinypng", "image", "img", "picture", "photo", "minify", "compress", "png", "webp", "jpeg", "avif"],
-  "engines": { "node": ">=14.0.0" },
+  "author": {
+    "name": "Gregor Panek",
+    "email": "gp@gregorpanek.de",
+    "url": "https://github.com/nymo"
+  },
+  "keywords": [
+    "gruntplugin",
+    "tinypng",
+    "image",
+    "img",
+    "picture",
+    "photo",
+    "minify",
+    "compress",
+    "png",
+    "webp",
+    "jpeg",
+    "avif"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "license": "GPL-3.0-only",
-  "peerDependencies": { "grunt": ">=1.0.0" },
+  "peerDependencies": {
+    "grunt": ">=1.0.0"
+  },
   "dependencies": {
     "ansi-colors": "^3.2.4",
     "fancy-log": "^1.3.3",
