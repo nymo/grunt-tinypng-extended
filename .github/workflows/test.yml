@@ -3,6 +3,10 @@ name: Test
 on:
   pull_request:
 
+# Least privilege: checkout only needs read access to repository contents.
+permissions:
+  contents: read
+
 jobs:
   test:
     runs-on: ubuntu-latest
