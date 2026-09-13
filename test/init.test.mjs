@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const require = createRequire(import.meta.url);
@@ -44,42 +45,54 @@ afterEach(() => nock.cleanAll());
 describe('grunt-tinypng-extended', () => {
   it('registers a Grunt multi-task and writes compressed files to destinations', async () => {
     mockApi();
-    const destination = path.resolve('test/assets/tmp/grunt-output.png');
-    fs.rmSync(path.dirname(destination), { recursive: true, force: true });
+    const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'grunt-tinypng-'));
+    const destination = path.join(temporaryDirectory, 'grunt-output.png');
 
-    const result = await register({ key, log: true }, [{ src: [fixture], dest: destination }]);
+    try {
+      const result = await register({ key, log: true }, [{ src: [fixture], dest: destination }]);
 
-    expect(result.success).toBe(true);
-    expect(fs.readFileSync(destination)).toEqual(compressed);
-    fs.rmSync(path.dirname(destination), { recursive: true, force: true });
+      expect(result.success).toBe(true);
+      expect(fs.readFileSync(destination)).toEqual(compressed);
+    } finally {
+      fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 
   it('supports signature caching and ignores matching files', async () => {
     const signature = path.resolve('.grunt-sigs-test');
     fs.rmSync(signature, { force: true });
-    const firstDestination = path.resolve('test/assets/tmp/first.png');
-    const secondDestination = path.resolve('test/assets/tmp/second.png');
-    mockApi();
-    await register({ key, sigFile: signature }, [{ src: [fixture], dest: firstDestination }]);
-    expect(fs.existsSync(signature)).toBe(true);
+    const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'grunt-tinypng-'));
+    const firstDestination = path.join(temporaryDirectory, 'first.png');
+    const secondDestination = path.join(temporaryDirectory, 'second.png');
 
-    const result = await register({ key, sigFile: signature }, [{ src: [fixture], dest: secondDestination }]);
-    expect(result.success).toBe(true);
-    expect(result.errors).toHaveLength(0);
-    expect(fs.existsSync(secondDestination)).toBe(false);
-    fs.rmSync(signature, { force: true });
-    fs.rmSync(path.dirname(firstDestination), { recursive: true, force: true });
+    try {
+      mockApi();
+      await register({ key, sigFile: signature }, [{ src: [fixture], dest: firstDestination }]);
+      expect(fs.existsSync(signature)).toBe(true);
+
+      const result = await register({ key, sigFile: signature }, [{ src: [fixture], dest: secondDestination }]);
+      expect(result.success).toBe(true);
+      expect(result.errors).toHaveLength(0);
+      expect(fs.existsSync(secondDestination)).toBe(false);
+    } finally {
+      fs.rmSync(signature, { force: true });
+      fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 
   it('overwrites sources when keepOriginal is false and handles ignored files', async () => {
-    const source = path.resolve('test/assets/tmp/source.png');
-    fs.mkdirSync(path.dirname(source), { recursive: true });
+    const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'grunt-tinypng-'));
+    const source = path.join(temporaryDirectory, 'source.png');
     fs.copyFileSync(fixture, source);
-    mockApi();
-    const result = await register({ key, keepOriginal: false, ignore: '*ignored.png' }, [{ src: [source], dest: path.resolve('unused.png') }]);
-    expect(result.success).toBe(true);
-    expect(fs.readFileSync(source)).toEqual(compressed);
-    fs.rmSync(path.dirname(source), { recursive: true, force: true });
+
+    try {
+      mockApi();
+      const result = await register({ key, keepOriginal: false, ignore: '*ignored.png' }, [{ src: [source], dest: path.resolve('unused.png') }]);
+      expect(result.success).toBe(true);
+      expect(fs.readFileSync(source)).toEqual(compressed);
+    } finally {
+      fs.rmSync(temporaryDirectory, { recursive: true, force: true });
+    }
   });
 
   it('requires an API key and exposes promise and callback validation', async () => {

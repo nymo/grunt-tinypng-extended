@@ -1,6 +1,7 @@
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { afterEach, describe, expect, it } from 'vitest';
 
 const require = createRequire(import.meta.url);
@@ -11,13 +12,14 @@ const createSignatureStore = require('../dist/signature-store.js').default;
 
 const key = 'coverage-test-key';
 const source = path.resolve('test/assets/image.png');
-const output = path.resolve('test/assets/tmp/coverage.png');
+const temporaryDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'grunt-tinypng-coverage-'));
+const output = path.join(temporaryDirectory, 'coverage.png');
 const image = fs.readFileSync(source);
 const small = fs.readFileSync('test/assets/image_small.png');
 
 afterEach(() => {
   nock.cleanAll();
-  fs.rmSync(path.dirname(output), { recursive: true, force: true });
+  fs.rmSync(temporaryDirectory, { recursive: true, force: true });
   fs.rmSync('.coverage-sigs', { force: true });
 });
 
